@@ -1,0 +1,141 @@
+Description:  EC2 Nodes for k8s.
+
+Parameters:
+  EnvName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+    Default: DEVENV
+  EKSImageId:
+    Type: String
+    Default: "ami-05d63a5e159150354"
+    Description: Ubuntu image id from https://cloud-images.ubuntu.com/aws-eks/
+  EKSInstanceType:
+    Type: String
+    Default: t3.medium
+    Description: Node group instance type
+  MinSize:
+    Description: Node group minimal capacity
+    Type: Number
+    Default: 1
+  DesiredCapacity:
+    Description: Node group desired capacity
+    Type: Number
+    Default: 3
+  MaxSize:
+    Description: Node group maximal capacity
+    Type: Number
+    Default: 10
+  VolumeSize:
+    Description: EBS volume size on nodes
+    Type: Number
+    Default: 80 
+  BootstrapArguments:
+    Type: String
+    Default: ""
+    Description: "Arguments to pass to the bootstrap script. See files/bootstrap.sh in https://github.com/awslabs/amazon-eks-ami"
+  RootVolDevice:
+    Type: String
+    Default: "/dev/sda1"
+  RootVolSize:
+    Type: Number
+    Default: 22
+  ExtraVolDevice:
+    Type: String
+    Default: "/dev/sdh"
+  ExtraVolSize:
+    Type: Number
+    Default: 1
+
+Resources:
+  EKSNodeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonSSMDirectoryServiceAccess
+        - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+
+  NodeInstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Path: /
+      Roles:
+        - !Ref EKSNodeRole
+
+  EKSNodeTemplate:
+    Type: 'AWS::EC2::LaunchTemplate'
+    Properties:
+      LaunchTemplateData:
+        ImageId: !Ref EKSImageId
+        InstanceType: !Ref EKSInstanceType
+#        KeyName: !Ref KeyPairName
+        SecurityGroupIds:
+          - Fn::ImportValue:
+                  !Sub "BC::${EnvName}::NODESGID"
+        BlockDeviceMappings: 
+          - Ebs:
+              VolumeSize: !Ref RootVolSize
+              VolumeType: gp2
+              DeleteOnTermination: true
+            DeviceName: !Ref RootVolDevice
+          - Ebs:
+              VolumeSize: !Ref ExtraVolSize
+              VolumeType: gp2
+              DeleteOnTermination: true
+            DeviceName: !Ref ExtraVolDevice
+        UserData: !Base64
+          "Fn::Sub": |
+            #!/bin/bash
+            set -o xtrace
+            /etc/eks/bootstrap.sh ${EnvName}EKS ${BootstrapArguments}
+            /opt/aws/bin/cfn-signal --exit-code $? \
+                     --stack  ${AWS::StackName} \
+                     --resource EKSNodegroup  \
+                     --region ${AWS::Region}
+
+  EKSNodegroup:
+    Type: 'AWS::EKS::Nodegroup'
+    Properties:
+      ClusterName:
+        Fn::ImportValue:
+          !Sub "BC::${EnvName}::EKS"
+      NodeRole: !GetAtt EKSNodeRole.Arn
+##      RemoteAccess:
+##        Ec2SshKey:
+      ScalingConfig:
+        MinSize: !Ref MinSize
+        DesiredSize: !Ref DesiredCapacity
+        MaxSize: !Ref MaxSize
+      LaunchTemplate:
+        Id: !Ref EKSNodeTemplate
+        Version: !GetAtt EKSNodeTemplate.LatestVersionNumber
+      Subnets:
+        - Fn::ImportValue:
+            !Sub "BC::${EnvName}::PUBNET1"
+        - Fn::ImportValue:
+            !Sub "BC::${EnvName}::PUBNET2"
+
+Outputs:
+  EKSNodegroup:
+    Description: A node group for EKS
+    Value: !Ref EKSNodegroup
+    Export:
+      Name: !Sub "BC::${EnvName}::EKSNODES"
+
+# cheat sheet
+
+# aws cloudformation deploy --template-file k8s-nodegroup.yaml --capabilities CAPABILITY_NAMED_IAM --stack-name "${TF_VAR_env_name}-NODES" --parameter-overrides EnvName=${TF_VAR_env_name}
+# aws cloudformation delete-stack --stack-name "${TF_VAR_env_name}-ALB"

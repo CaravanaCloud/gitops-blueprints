@@ -1,0 +1,49 @@
+Description:  Storage for artifacts in the delivery pipeline.
+
+Parameters:
+  EnvName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+    Default: DEVENV
+
+Resources:
+  ArtifactsBucket:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Retain
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  ContainerRepository: 
+    Type: 'AWS::ECR::Repository'
+  
+  ContainerFS:
+    Type: 'AWS::EFS::FileSystem'
+
+Outputs:
+  ArtifactsBucketName:
+    Value: !Ref ArtifactsBucket
+    Export:
+      Name: !Sub "BC::${EnvName}::DISTBKT"
+      
+  ContainerRepositoryName:
+    Value: !Ref ContainerRepository
+    Export:
+      Name: !Sub "BC::${EnvName}::ECR"
+
+  ContainerFSId:
+    Value: !Ref ContainerFS
+    Export:
+      Name: !Sub "BC::${EnvName}::EFS"
+      
+  ContainerFSArn:
+    Value: !GetAtt ContainerFS.Arn
+    Export:
+      Name: !Sub "BC::${EnvName}::EFSARN"
+
+# Cheat Sheet
+
+# aws cloudformation deploy --template-file storage.yaml --stack-name "${TF_VAR_env_name}-STORAGE" --parameter-overrides "EnvName=$TF_VAR_env_name"
