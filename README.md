@@ -1,6 +1,7 @@
-# eks-blueprint
+# K8s Blueprints
 
 A sample "working" Kubernetes cluster on EKS, with cloudformation, terraform and all that jazz.
+So that nobody has to waste so much time on this again and again...
 
 # HOWTO
 
@@ -16,4 +17,4 @@ A sample "working" Kubernetes cluster on EKS, with cloudformation, terraform and
 ./main/redeploy.sh
 ```
 
-3. May the force be with you...
+3. May the force be with you... and join the rebelion!
