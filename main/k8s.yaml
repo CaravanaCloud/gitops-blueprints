@@ -14,7 +14,7 @@ Parameters:
   EKSVersion:
     Description: Kubernetes version
     Type: String
-    Default: '1.18'
+    Default: '1.19'
 
 Conditions:
   FargateCondition: !Equals 
