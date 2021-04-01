@@ -129,6 +129,7 @@ dmypy.json
 .pyre/
 
 *.out.yaml
+*.out
 
 # Terraform
 *.tfstate
@@ -136,4 +137,9 @@ dmypy.json
 *.lock.info
 .terraform/
 *.tfstate.backup
+
+.idea/
+.envrc
+.lambda_layer_template
+
 
