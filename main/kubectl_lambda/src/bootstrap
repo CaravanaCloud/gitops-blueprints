@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-export PATH=$PATH:/opt/awscli:/opt/kubectl
+export PATH=$PATH:/opt/awscli:/opt/kubectl:/tmp/eksctl
 export KUBECONFIG=/tmp/kubeconfig
 
 if [ -z ${cluster_name:-} ]; then
@@ -17,7 +17,15 @@ lambda_role_arn=${lambda_role_arn-default}
 echo "Updating kubeconfig to cluster_name=${cluster_name}"
 aws eks update-kubeconfig --name "${cluster_name}"
 
-# Processing Invocation
+if ! command -v eksctl &> /dev/null
+then
+    echo "eksctl could not be found, installing..."
+    mkdir -p /tmp/eksctl
+    curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp/eksctl/
+    eksctl version
+fi
+
+# Processing Invocations
 while true
 do
   HEADERS="$(mktemp)"

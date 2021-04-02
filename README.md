@@ -3,6 +3,9 @@
 A sample "working" Kubernetes cluster on EKS, with cloudformation, terraform and all that jazz.
 So that nobody has to waste so much time on this again and again...
 
+
+https://github.com/aws-samples/amazon-eks-refarch-cloudformation
+
 # HOWTO
 
 1. Deploy the storage tier (s3, efs, ...) once per account
