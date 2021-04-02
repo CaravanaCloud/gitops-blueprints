@@ -55,13 +55,13 @@ sam package \
 sam deploy \
 	  --template-file "$DIR/main/kubectl_lambda/.cloudformation.out.yaml" \
 	  --stack-name "${TF_VAR_env_name}-RCTL" \
-	  --parameter-overrides EnvName="${TF_VAR_env_name}" KubectlLayerArn="$LAYER_ARN" \
+	  --parameter-overrides "EnvName=${TF_VAR_env_name} KubectlLayerArn=$LAYER_ARN" \
 	  --capabilities CAPABILITY_IAM \
 	  --region $AWS_REGION
 
 aws cloudformation wait stack-create-complete --stack-name "${TF_VAR_env_name}-RCTL"
 
-RUNCTLID=$(aws cloudformation list-exports --query "Exports[?Name=='BC::${TF_VAR_env_name}::RUNCTLID'].Value" --output=text)
+RUNCTLID=$(aws cloudformation list-exports --query "Exports[?Name=='BC::${TF_VAR_env_name}::RCTLID'].Value" --output=text)
 
 echo "Invoking $RUNCTLID"
 
@@ -71,6 +71,17 @@ aws lambda invoke --function-name $RUNCTLID out \
   --query 'LogResult' \
   --output text |  base64 -d
 
+aws lambda invoke --function-name $RUNCTLID out \
+  --log-type Tail \
+  --payload $(echo "{\"runctl_cmd\":\"helm version\"}" | base64) \
+  --query 'LogResult' \
+  --output text |  base64 -d
+
+aws lambda invoke --function-name $RUNCTLID out \
+  --log-type Tail \
+  --payload $(echo "{\"runctl_cmd\":\"eksctl version\"}" | base64) \
+  --query 'LogResult' \
+  --output text |  base64 -d
 
 # Networking
 
@@ -102,12 +113,10 @@ aws cloudformation deploy \
 aws cloudformation wait stack-create-complete --stack-name "${TF_VAR_env_name}-NODES"
 
 # Working Cluster
-
-aws eks update-kubeconfig --name "${TF_VAR_env_name}EKS"
-
+EKSCLUSTER="${TF_VAR_env_name}EKS"
+aws eks update-kubeconfig --name $EKSCLUSTER
 kubectl get nodes
 
-# ...
-
-##################
-
+# RBAC Mapping
+RCTLROLEARN=$(aws cloudformation list-exports --query "Exports[?Name=='BC::${TF_VAR_env_name}::RCTLROLEARN'].Value" --output=text)
+eksctl create iamidentitymapping --cluster $EKSCLUSTER --arn $RCTLROLEARN --username runctlusr

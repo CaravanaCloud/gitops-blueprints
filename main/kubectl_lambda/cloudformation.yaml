@@ -36,10 +36,22 @@ Outputs:
     Description: RunCtl function id
     Value: !Ref RunCtlFunc
     Export:
-      Name: !Sub "BC::${EnvName}::RUNCTLID"
+      Name: !Sub "BC::${EnvName}::RCTLID"
 
   RunCtlFuncArn:
     Description: RunCtl function arn
     Value: !GetAtt RunCtlFunc.Arn
     Export:
-      Name: !Sub "BC::${EnvName}::RUNCTLARN"
+      Name: !Sub "BC::${EnvName}::RCTLARN"
+
+  RunCtlRoleArn:
+    Description: RunCtl role arn
+    Value: !GetAtt RunCtlFuncRole.Arn
+    Export:
+      Name: !Sub "BC::${EnvName}::RCTLROLEARN"
+
+  RunCtlRoleId:
+    Description: RunCtl role id
+    Value: !GetAtt RunCtlFuncRole.RoleId
+    Export:
+      Name: !Sub "BC::${EnvName}::RCTLROLEID"
