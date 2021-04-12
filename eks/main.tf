@@ -75,11 +75,6 @@ module "storage" {
   env_name = var.env_name
 }
 
-module "kubectl_layer" {
-  source = "./kubectl_layer"
-  env_name = var.env_name
-}
-
 module "network" {
   source = "./network"
   env_name = var.env_name
@@ -106,30 +101,48 @@ module "eks_nodegroup" {
   depends_on = [module.eks_cluster]
 }
 
+/* Work In Progress: Kubectl Lambda
+
+module "kubectl_layer" {
+  source = "./kubectl_layer"
+  env_name = var.env_name
+}
+
+module "sam_package" {
+  source  = "matti/resource/shell"
+  command = "mkdir -p ./kubectl_lambda/target && sam package --template-file ${path.module}/kubectl_lambda/main.yaml --s3-bucket ${module.storage.bucket_name} --output-template-file ${path.module}/kubectl_lambda/target/main.out.yaml "
+}
+
 module "kubectl_lambda" {
   source = "./kubectl_lambda"
   env_name = var.env_name
   bucket_name = module.storage.bucket_name
   layer_arn = module.kubectl_layer.layer_arn
-  depends_on = [module.eks_cluster]
+  depends_on = [module.storage, module.eks_cluster, module.sam_package.stdout]
 }
 
-#module "invoke_kubectl_version" {
-#  source = "./invoke_kubectl"
-#  kubectl_fn = module.kubectl_lambda.kubectl_fn
-#  kubectl_cmd = "kubectl version"
-#}
+module "iam_mapping" {
+ source = "./iam_mapping"
+ env_name = var.env_name
+ role_arn = module.kubectl_lambda.kubectl_role_arn
+ depends_on = [module.eks_cluster]
+}
 
-#module "invoke_helm_version" {
-#  source = "./invoke_kubectl"
-#  kubectl_fn = module.kubectl_lambda.kubectl_fn
-#  kubectl_cmd = "helm version"
-#}
+module "invoke_kubectl_version" {
+  source = "./invoke_kubectl"
+  command = "kubectl version"
+  function_name = module.kubectl_lambda.kubectl_fn
+}
 
-#module "invoke_eksctl_version" {
-#  source = "./invoke_kubectl"
-#  kubectl_fn = module.kubectl_lambda.kubectl_fn
-#  kubectl_cmd = "eksctl version"
-#}
+module "invoke_helm_version" {
+  source = "./invoke_kubectl"
+  command = "helm version"
+  function_name = module.kubectl_lambda.kubectl_fn
+}
 
-
+module "invoke_eksctl_version" {
+  source = "./invoke_kubectl"
+  command = "eksctl version"
+  function_name = module.kubectl_lambda.kubectl_fn
+}
+*/

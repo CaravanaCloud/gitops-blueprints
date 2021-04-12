@@ -7,7 +7,7 @@ Parameters:
     Default: DEVENV
   EKSImageId:
     Type: String
-    Default: "ami-05d63a5e159150354"
+    Default: "ami-0fc3ca5b2c5e1fb11"
     Description: Ubuntu image id from https://cloud-images.ubuntu.com/aws-eks/
   EKSInstanceType:
     Type: String
