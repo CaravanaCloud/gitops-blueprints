@@ -1,15 +1,15 @@
-variable kubectl_fn {}
-variable kubectl_cmd {
+variable function_name {}
+variable command {
   default = "kubectl version"
 }
 
 data "aws_lambda_invocation" "kubectl_version" {
-  function_name = var.kubectl_fn
+  function_name = var.function_name
   input = <<JSON
-  { "runctl_cmd": "${var.kubectl_cmd}" }
+  { "runctl_cmd": "${var.command}" }
 JSON
 }
 
-output "invocation_result" {
-  value = jsondecode(data.aws_lambda_invocation.kubectl_version.result)
+output "result" {
+  value = data.aws_lambda_invocation.kubectl_version.result
 }

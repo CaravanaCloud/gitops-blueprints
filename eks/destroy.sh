@@ -2,11 +2,13 @@
 set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-BC_DISTBKT=$(aws cloudformation list-exports --query "Exports[?Name=='BC::${TF_VAR_env_name}::DISTBKT'].Value" --output=text)
-BC_DISTBKT_URL="s3://${BC_DISTBKT}/"
-
-echo "Emptying $BC_DISTBKT_URL"
-aws s3 rm "$BC_DISTBKT_URL" --recursive
+DISTBKT=$(aws cloudformation list-exports --query "Exports[?Name=='BC::${TF_VAR_env_name}::DISTBKT'].Value" --output=text)
+# shellcheck disable=SC2236
+if [ ! -z "$DISTBKT" ]; then
+  DISTBKT_URL="s3://${DISTBKT}/"
+  echo "Emptying $DISTBKT_URL"
+  aws s3 rm "$DISTBKT_URL" --recursive
+fi
 
 echo "Destroying"
 pushd "$DIR"

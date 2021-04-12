@@ -1,8 +1,8 @@
 #!/bin/sh
 
-set -euo pipefail
+#set -euo pipefail
 
-export PATH=$PATH:/opt/awscli:/opt/kubectl:/tmp/eksctl
+export PATH=$PATH:/opt/awscli:/opt/kubectl:/opt/helm:/tmp/eksctl
 export KUBECONFIG=/tmp/kubeconfig
 
 if [ -z ${cluster_name:-} ]; then
@@ -39,6 +39,7 @@ do
 
   # Execute command and capture response
   # TODO: Security checks?
+  echo "=========[EVAL][$RUNCTL_CMD]"
   RESPONSE=$(eval "$RUNCTL_CMD")
   EXITCODE=$?
 
