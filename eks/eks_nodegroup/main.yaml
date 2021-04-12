@@ -28,7 +28,7 @@ Parameters:
   VolumeSize:
     Description: EBS volume size on nodes
     Type: Number
-    Default: 80 
+    Default: 80
   BootstrapArguments:
     Type: String
     Default: ""
@@ -53,12 +53,12 @@ Resources:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - ec2.amazonaws.com
-          Action:
-          - sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
         - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
@@ -81,11 +81,10 @@ Resources:
       LaunchTemplateData:
         ImageId: !Ref EKSImageId
         InstanceType: !Ref EKSInstanceType
-#        KeyName: !Ref KeyPairName
         SecurityGroupIds:
           - Fn::ImportValue:
-                  !Sub "BC::${EnvName}::NODESGID"
-        BlockDeviceMappings: 
+              !Sub "BC::${EnvName}::NODESGID"
+        BlockDeviceMappings:
           - Ebs:
               VolumeSize: !Ref RootVolSize
               VolumeType: gp2
@@ -113,8 +112,6 @@ Resources:
         Fn::ImportValue:
           !Sub "BC::${EnvName}::EKS"
       NodeRole: !GetAtt EKSNodeRole.Arn
-##      RemoteAccess:
-##        Ec2SshKey:
       ScalingConfig:
         MinSize: !Ref MinSize
         DesiredSize: !Ref DesiredCapacity
@@ -127,6 +124,8 @@ Resources:
             !Sub "BC::${EnvName}::PUBNET1"
         - Fn::ImportValue:
             !Sub "BC::${EnvName}::PUBNET2"
+      Tags:
+        Name: !Sub "${EnvName}_ngi"
 
 Outputs:
   EKSNodegroup:

@@ -1,4 +1,4 @@
-Description: Networking resources for a BC environment
+Description: Networking resources for the eks cluster
 
 Parameters:
   EnvName:
@@ -507,5 +507,5 @@ Outputs:
 
 # cheat sheet
 
-# aws cloudformation deploy --template-file networking.yaml --stack-name "${TF_VAR_env_name}-NETW" --parameter-overrides EnvName=${TF_VAR_env_name}
+# aws cloudformation deploy --template-file main.yaml --stack-name "${TF_VAR_env_name}-NETW" --parameter-overrides EnvName=${TF_VAR_env_name}
 # aws cloudformation delete-stack --stack-name "${TF_VAR_env_name}-NETW"
