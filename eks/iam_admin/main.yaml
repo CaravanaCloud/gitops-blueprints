@@ -1,0 +1,43 @@
+Description: IAM User for administration (cluster owner)
+
+Parameters:
+  EnvName:
+    Type: String
+  KeyStatus:
+    Type: String
+    Default: Inactive
+    AllowedValues:
+      - Active
+      - Inactive
+
+Resources:
+  AdminUser:
+    Type: AWS::IAM::User
+    Properties:
+      #TODO: Restrict to cluster access
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+      UserName: !Sub "USR${EnvName}"
+
+  AdminKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      Status: !Ref KeyStatus
+      UserName: !Ref AdminUser
+
+Outputs:
+  AdminUserName:
+    Value: !Ref AdminUser
+    Export:
+      Name: !Sub "BC::${EnvName}::ADMUSR"
+
+  AdminArn:
+    Value: !GetAtt AdminUser.Arn
+    Export:
+      Name: !Sub "BC::${EnvName}::ADMARN"
+
+  AdminAccessKey:
+    Value: !Ref AdminKey
+
+  AdminSecretKey:
+    Value: !GetAtt AdminKey.SecretAccessKey

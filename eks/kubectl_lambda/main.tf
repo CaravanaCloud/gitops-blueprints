@@ -1,23 +1,19 @@
-variable "kubectl_layer_app_id" {
-  type = string
-  default = "arn:aws:serverlessrepo:us-east-1:903779448426:applications/lambda-layer-kubectl"
-}
+variable "env_name" {}
+variable "bucket_name" {}
+variable "layer_arn" {}
 
-module "kubectl_layer_version_cmd" {
+module "sam_package" {
   source  = "matti/resource/shell"
-  command = "aws serverlessrepo get-application --application-id ${var.kubectl_layer_app_id} --query 'Version.SemanticVersion' --output text"
+  command = "sam package --template-file ${path.module}/cloudformation.yaml --s3-bucket ${var.bucket_name} --output-template-file ${path.module}/target/cloudformation.out.yaml "
 }
 
-module "kubectl_layer_cfn_cmd" {
-  source  = "matti/resource/shell"
-  command = "aws serverlessrepo create-cloud-formation-template --application-id  ${var.kubectl_layer_app_id} --semantic-version ${module.kubectl_layer_version_cmd.stdout} --query TemplateUrl --output text"
-}
-
-output "layer_version" {
-  value = module.kubectl_layer_version_cmd.stdout
-}
-
-output "layer_template_url" {
-  value = module.kubectl_layer_cfn_cmd.stdout
+resource "aws_cloudformation_stack" "kubectl_lambda" {
+  name = "${var.env_name}-RCTL"
+  parameters = {
+    EnvName = var.env_name
+    KubectlLayerArn = var.layer_arn
+  }
+  capabilities = ["CAPABILITY_AUTO_EXPAND","CAPABILITY_IAM"]
+  template_body = file("${path.module}/target/cloudformation.out.yaml")
 }
 
