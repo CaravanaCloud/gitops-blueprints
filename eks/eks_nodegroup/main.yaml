@@ -100,6 +100,7 @@ Resources:
             #!/bin/bash
             set -o xtrace
             /etc/eks/bootstrap.sh ${EnvName}EKS ${BootstrapArguments}
+            systemctl enable --now iscsid
             /opt/aws/bin/cfn-signal --exit-code $? \
                      --stack  ${AWS::StackName} \
                      --resource EKSNodegroup  \
