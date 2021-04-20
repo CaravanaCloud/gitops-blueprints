@@ -16,6 +16,8 @@ then
       export TF_VAR_env_name="U$(whoami | awk '{ print toupper($0) }')"
 fi
 
+export TF_VAR_env_name=${TF_VAR_env_name^^}
+
 pushd "$DIR"
 echo "Deploying storage for environment $TF_VAR_env_name ..."
 sleep 3
