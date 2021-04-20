@@ -14,12 +14,23 @@ jobs:
       - uses: nelonoel/branch-name@v1.0.1
       - run: echo "Running on branch ${BRANCH_NAME}"
 
-      - name: Download Kubectl
+      - name: Download kubectl
         run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-      - name: Install Kubectl
+      - name: Install kubectl
         run: sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
       - name: Check kubectl
-        run: kubectl version client
+        run: kubectl version --client
+      - name: Locate kubectl
+        run: which kubectl
+
+      - name: Download eksctl
+        run: curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+      - name: Install eksctl
+        run: sudo mv /tmp/eksctl /usr/local/bin
+      - name: Check eksctl
+        run: eksctl version
+      - name: Locate eksctl
+        run: which eksctl
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
