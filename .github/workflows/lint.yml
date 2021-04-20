@@ -38,6 +38,7 @@ jobs:
           #
           VALIDATE_JAVA: false
           VALIDATE_HTML: false
+          VALIDATE_CLOUDFORMATION: false
           #
           OUTPUT_FORMAT: tap
           OUTPUT_FOLDER: target/super-linter
