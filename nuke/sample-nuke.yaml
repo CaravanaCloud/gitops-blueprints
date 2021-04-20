@@ -1,0 +1,70 @@
+regions:
+  - eu-north-1
+  - ap-south-1
+  - eu-west-3
+  - eu-west-2
+  - eu-west-1
+  - ap-northeast-3
+  - ap-northeast-2
+  - ap-northeast-1
+  - sa-east-1
+  - ca-central-1
+  - ap-southeast-1
+  - ap-southeast-2
+  - eu-central-1
+  - us-east-1
+  - us-east-2
+  - us-west-1
+# Spare Oregon? - us-west-2
+  - global
+
+resource-types:
+  targets:
+    - CloudFormationStack
+    - CloudFormationStackSet
+    - CloudFormationType
+    - ElasticBeanstalkApplication
+    - ElasticBeanstalkEnvironment
+    - EC2Address
+    - EC2ClientVpnEndpoint
+    - EC2ClientVpnEndpointAttachment
+    - EC2CustomerGateway
+    - EC2DHCPOption
+    - EC2EgressOnlyInternetGateway
+    - EC2Image
+    - EC2Instance
+    - EC2InternetGateway
+    - EC2InternetGatewayAttachment
+    - EC2KeyPair
+    - EC2LaunchTemplate
+    - EC2NATGateway
+    - EC2NetworkACL
+    - EC2NetworkInterface
+    - EC2PlacementGroup
+    - EC2RouteTable
+    - EC2SecurityGroup
+    - EC2Snapshot
+    - EC2SpotFleetRequest
+    - EC2Subnet
+    - EC2TGW
+    - EC2TGWAttachment
+    - EC2VPC
+    - EC2VPCEndpoint
+    - EC2VPCEndpointServiceConfiguration
+    - EC2VPCPeeringConnection
+    - EC2VPNConnection
+    - EC2VPNGateway
+    - EC2VPNGatewayAttachment
+    - EC2Volume
+    - ELB
+    - ELBv2
+    - ELBv2TargetGroup
+    - S3Bucket
+    - S3MultipartUpload
+    - S3Object
+
+account-blocklist:
+  - "999999999999" # production
+
+accounts:
+  "192912639870": {} # sandbox

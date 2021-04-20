@@ -89,7 +89,7 @@ Resources:
       ClusterName: !Ref EKSCluster
       PodExecutionRoleArn: !GetAtt EKSFargatePodExecutionRole.Arn
       Selectors:
-        - namespace: !Ref FargateNamespace
+        - Namespace: !Ref FargateNamespace
       Subnets:
         - Fn::ImportValue:
             !Sub "BC::${EnvName}::PUBNET1"
