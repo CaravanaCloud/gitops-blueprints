@@ -6,7 +6,6 @@ terraform {
   }
 }
 
-provider "aws" {}
 
 variable "env_name" {
   type    = string
@@ -17,6 +16,11 @@ variable "env_name" {
     condition     = can(regex("[A-Za-z0-9]*", var.env_name))
     error_message = "Environment name must satisfy regular expression pattern '[A-Za-z0-9]*-' ."
   }
+}
+
+variable "aws_region" {
+  type    = string
+  default = "eu-west-1"
 }
 
 variable "min_size" {
@@ -64,6 +68,9 @@ variable "extra_device" {
   default = "/dev/sdh"
 }
 
+provider "aws" {
+  region = var.aws_region
+}
 
 module "iam_admin" {
   source = "./iam_admin"
