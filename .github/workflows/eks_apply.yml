@@ -11,6 +11,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: nelonoel/branch-name@v1.0.1
+      - run: echo "Running on branch ${BRANCH_NAME}"
 
       - name: Download Kubectl
         run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
