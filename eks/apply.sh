@@ -27,8 +27,7 @@ terraform apply -auto-approve
 terraform output > .terraform.outputs.txt
 popd
 
-export EKS_NAME=$(aws cloudformation list-exports --query "Exports[?Name=='BC::${TF_VAR_env_name}::EKS'].Value" --output=text)
-
+export EKS_NAME=$(terraform  output -raw eks_name)
 echo "EKS deployed as [$EKS_NAME]"
 
 echo "Connecting kubectl to EKS $TF_VAR_env_name"
@@ -39,5 +38,3 @@ kubectl get nodes
 kubectl get svc
 
 echo "K8S is ready!"
-
-
