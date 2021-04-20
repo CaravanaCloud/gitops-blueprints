@@ -2,3 +2,7 @@
 .envrc
 target
 nuke/aws-nuke
+
+.terraform.*
+terraform.*
+

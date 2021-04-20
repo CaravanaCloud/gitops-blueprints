@@ -15,7 +15,7 @@ regions:
   - us-east-1
   - us-east-2
   - us-west-1
-  - us-west-2
+# Spare Oregon? - us-west-2
   - global
 
 resource-types:
@@ -23,6 +23,45 @@ resource-types:
     - CloudFormationStack
     - CloudFormationStackSet
     - CloudFormationType
+    - ElasticBeanstalkApplication
+    - ElasticBeanstalkEnvironment
+    - EC2Address
+    - EC2ClientVpnEndpoint
+    - EC2ClientVpnEndpointAttachment
+    - EC2CustomerGateway
+    - EC2DHCPOption
+    - EC2EgressOnlyInternetGateway
+    - EC2Image
+    - EC2Instance
+    - EC2InternetGateway
+    - EC2InternetGatewayAttachment
+    - EC2KeyPair
+    - EC2LaunchTemplate
+    - EC2NATGateway
+    - EC2NetworkACL
+    - EC2NetworkInterface
+    - EC2PlacementGroup
+    - EC2RouteTable
+    - EC2SecurityGroup
+    - EC2Snapshot
+    - EC2SpotFleetRequest
+    - EC2Subnet
+    - EC2TGW
+    - EC2TGWAttachment
+    - EC2VPC
+    - EC2VPCEndpoint
+    - EC2VPCEndpointServiceConfiguration
+    - EC2VPCPeeringConnection
+    - EC2VPNConnection
+    - EC2VPNGateway
+    - EC2VPNGatewayAttachment
+    - EC2Volume
+    - ELB
+    - ELBv2
+    - ELBv2TargetGroup
+    - S3Bucket
+    - S3MultipartUpload
+    - S3Object
 
 account-blocklist:
   - "999999999999" # production
