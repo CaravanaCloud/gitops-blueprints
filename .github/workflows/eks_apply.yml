@@ -8,11 +8,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_env_name: GHEK
+      TF_VAR_aws_region: us-west-2
+      TF_VAR_image_id: ami-0fc3ca5b2c5e1fb11
+      TF_VAR_instance_type: t3a.small
+      TF_VAR_min_size: 1
+      TF_VAR_desired_capacity: 1
+      TF_VAR_max_size: 10
+      TF_VAR_root_size: 32
+      TF_VAR_extra_size: 1
+      TF_VAR_use_spot: false
 
     steps:
       - uses: actions/checkout@v2
       - uses: nelonoel/branch-name@v1.0.1
-      - run: echo "Running on branch ${BRANCH_NAME}"
+      - run: echo "Running on branch ${BRANCH_NAME} env ${TF_VAR_env_name}"
 
       #TODO: Cache Binaries
       - name: Download kubectl
