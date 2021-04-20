@@ -1,6 +1,9 @@
 name: Maven-Build
 
-on: push
+on:
+  push:
+    branches:
+      - 'eks/**'
 
 jobs:
   build:
@@ -8,6 +11,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Download Kubectl
+        run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      - name: Install Kubectl
+        run: sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: Check kubectl
+        run: kubectl version client
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -18,3 +28,4 @@ jobs:
       - name: Check AWS authentication
         run: aws sts get-caller-identity
 
+      -
