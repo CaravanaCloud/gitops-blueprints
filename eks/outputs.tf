@@ -42,9 +42,26 @@ output "eks_node_sg_id" {
   value = module.network.eks_node_sg_id
 }
 
+output "create_iam_mapping_out" {
+  value = module.iam_mapping.create_iam_mapping_out
+}
+
 output "check_eks_access_out" {
   value = module.check_eks_access.stdout
 }
+
+output "create_admin_context_out" {
+  value = module.openebs.create_admin_context_out
+}
+
+output "use_admin_context_out" {
+  value = module.openebs.use_admin_context_out
+}
+
+output "mainsh_out" {
+  value = module.openebs.mainsh_out
+}
+
 
 /* Work In Progress
 

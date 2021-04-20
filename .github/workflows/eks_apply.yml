@@ -33,6 +33,13 @@ jobs:
       - name: Locate eksctl
         run: which eksctl
 
+      - name: Install helm
+        run: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      - name: Check helm
+        run: eksctl version
+      - name: Locate helm
+        run: which helm
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -47,3 +54,4 @@ jobs:
 
       - name: Run apply script
         run: ./apply.sh
+        working-directory: eks
