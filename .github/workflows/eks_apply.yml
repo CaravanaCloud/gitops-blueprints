@@ -40,6 +40,15 @@ jobs:
       - name: Locate helm
         run: which helm
 
+      - name: Install terraform
+        run: curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+      - run: sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+      - run: sudo apt-get update && sudo apt-get install terraform
+      - name: Check terraform
+        run: terraform version
+      - name: Locate terraform
+        run: which terraform
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
