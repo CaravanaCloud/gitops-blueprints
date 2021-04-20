@@ -24,5 +24,8 @@ resource-types:
     - CloudFormationStackSet
     - CloudFormationType
 
+account-blocklist:
+  - "999999999999" # production
+
 accounts:
   "192912639870": {} # sandbox
