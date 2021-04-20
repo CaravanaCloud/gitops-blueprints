@@ -31,7 +31,7 @@ export EKS_NAME=$(terraform  output -raw eks_name)
 echo "EKS deployed as [$EKS_NAME]"
 
 echo "Connecting kubectl to EKS $TF_VAR_env_name"
-aws eks update-kubeconfig --name "${EKS_NAME}"
+aws eks update-kubeconfig --name "${EKS_NAME}" --region "${TF_VAR_aws_region}"
 
 echo "Ping K8S"
 kubectl get nodes
