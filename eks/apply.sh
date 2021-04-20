@@ -24,16 +24,15 @@ sleep 3
 echo "Deploying EKS"
 terraform init -upgrade
 terraform apply -auto-approve
-#terraform state list
-#terraform output
+terraform output > .terraform.outputs.txt
 popd
 
-echo "EKS deployed."
-#export BC_EKS=$(aws cloudformation list-exports --query "Exports[?Name=='BC::${TF_VAR_env_name}::EKS'].Value" --output=text)
-#export AWS_REGION=$(aws configure get region)
+export EKS_NAME=$(aws cloudformation list-exports --query "Exports[?Name=='BC::${TF_VAR_env_name}::EKS'].Value" --output=text)
+
+echo "EKS deployed as [$EKS_NAME]"
 
 echo "Connecting kubectl to EKS $TF_VAR_env_name"
-aws eks update-kubeconfig --name "${TF_VAR_env_name}EKS"
+aws eks update-kubeconfig --name "${EKS_NAME}"
 
 echo "Ping K8S"
 kubectl get nodes
