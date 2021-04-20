@@ -1,4 +1,4 @@
-name: Maven-Build
+name: eks_apply
 
 on:
   push:
@@ -27,5 +27,3 @@ jobs:
           aws-region: us-west-2
       - name: Check AWS authentication
         run: aws sts get-caller-identity
-
-      -
