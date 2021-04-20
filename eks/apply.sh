@@ -8,9 +8,6 @@ DEFAULT_ENVNAME="ENV$(whoami | awk '{ print toupper($0) }')"
 pushd "$DIR"
 export TF_VAR_env_name=${TF_VAR_env_name:-$DEFAULT_ENVNAME}
 
-echo "Take this variable, it might help..."
-echo "export TF_VAR_env_name=${TF_VAR_env_name}"
-
 echo "Deploying storage for environment $TF_VAR_env_name ..."
 sleep 3
 
