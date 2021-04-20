@@ -42,6 +42,10 @@ output "eks_node_sg_id" {
   value = module.network.eks_node_sg_id
 }
 
+output "check_eks_access_out" {
+  value = module.check_eks_access.stdout
+}
+
 /* Work In Progress
 
 output "kubectl_layer_version" {

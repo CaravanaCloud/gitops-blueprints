@@ -14,6 +14,7 @@ jobs:
       - uses: nelonoel/branch-name@v1.0.1
       - run: echo "Running on branch ${BRANCH_NAME}"
 
+      #TODO: Cache Binaries
       - name: Download kubectl
         run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       - name: Install kubectl
@@ -40,3 +41,9 @@ jobs:
           aws-region: us-west-2
       - name: Check AWS authentication
         run: aws sts get-caller-identity
+
+      - name: Lookup local env
+        run: find .
+
+      - name: Run apply script
+        run: ./apply.sh
