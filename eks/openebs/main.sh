@@ -16,5 +16,5 @@ helm install openebs openebs/openebs
 echo "check helm chart"
 helm ls
 
-echo "mainsh done"
+echo "Openebs setup done"
 

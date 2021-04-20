@@ -4,10 +4,19 @@
 set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-DEFAULT_ENVNAME="ENV$(whoami | awk '{ print toupper($0) }')"
-pushd "$DIR"
-export TF_VAR_env_name=${TF_VAR_env_name:-$DEFAULT_ENVNAME}
+if [ -z "$TF_VAR_env_name" ]
+then
+      echo "\$TF_VAR_env_name is empty, trying branch name..."
+      export TF_VAR_env_name=$(sed -e 's./..g' <<< "${BRANCH_NAME}")
+fi
 
+if [ -z "$TF_VAR_env_name" ]
+then
+      echo "\$TF_VAR_env_name still empty, trying user name..."
+      export TF_VAR_env_name="U$(whoami | awk '{ print toupper($0) }')"
+fi
+
+pushd "$DIR"
 echo "Deploying storage for environment $TF_VAR_env_name ..."
 sleep 3
 
