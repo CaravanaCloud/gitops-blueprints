@@ -139,7 +139,7 @@ dmypy.json
 *.tfstate.backup
 
 ../.idea/
-.envrc
+../.envrc
 .lambda_layer_template
 
 
