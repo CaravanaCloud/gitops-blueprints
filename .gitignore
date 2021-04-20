@@ -1,3 +1,4 @@
 .idea/
+.envrc
 target
 nuke/aws-nuke

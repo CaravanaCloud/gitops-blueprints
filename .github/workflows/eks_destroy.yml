@@ -65,6 +65,7 @@ jobs:
       - name: Lookup local env
         run: find .
 
-      - name: Run destroy script
-        run: ./destroy.sh
-        working-directory: eks
+#     TODO: Restore terraform state
+#      - name: Run destroy script
+#        run: ./destroy.sh
+#        working-directory: eks
