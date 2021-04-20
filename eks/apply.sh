@@ -6,7 +6,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 DEFAULT_ENVNAME="ENV$(whoami | awk '{ print toupper($0) }')"
 pushd "$DIR"
-direnv allow
 export TF_VAR_env_name=${TF_VAR_env_name:-$DEFAULT_ENVNAME}
 
 echo "Take this variable, it might help..."
