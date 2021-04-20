@@ -1,7 +1,7 @@
 # K8s Blueprints
 
 This repository shares the result of our practice in building Kubernetes based applications and their cloud deployments.
-
+ 
 
 # Technologies Used
  
