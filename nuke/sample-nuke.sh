@@ -1,0 +1,1 @@
+./aws-nuke -c ./sample-nuke.yml --profile sandbox
