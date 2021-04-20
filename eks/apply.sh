@@ -1,38 +1,40 @@
 #!/bin/bash
-#
-
 set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-DEFAULT_ENVNAME="ENV$(whoami | awk '{ print toupper($0) }')"
+if [ -z "$TF_VAR_env_name" ]
+then
+      echo "\$TF_VAR_env_name is empty, trying branch name..."
+      export TF_VAR_env_name="B${BRANCH_NAME}"
+fi
+
+if [ -z "$TF_VAR_env_name" ]
+then
+      echo "\$TF_VAR_env_name still empty, trying user name..."
+      export TF_VAR_env_name="U$(whoami | awk '{ print toupper($0) }')"
+fi
+
+export TF_VAR_env_name=$(sed -e 's./..g' <<< "${TF_VAR_env_name}")
+export TF_VAR_env_name=$(echo $TF_VAR_env_name |awk '{print toupper($0)}')
+
 pushd "$DIR"
-direnv allow
-export TF_VAR_env_name=${TF_VAR_env_name:-$DEFAULT_ENVNAME}
-
-echo "Take this variable, it might help..."
-echo "export TF_VAR_env_name=${TF_VAR_env_name}"
-
 echo "Deploying storage for environment $TF_VAR_env_name ..."
 sleep 3
 
 echo "Deploying EKS"
 terraform init -upgrade
 terraform apply -auto-approve
-#terraform state list
-#terraform output
+terraform output > .terraform.outputs.txt
 popd
 
-echo "EKS deployed."
-#export BC_EKS=$(aws cloudformation list-exports --query "Exports[?Name=='BC::${TF_VAR_env_name}::EKS'].Value" --output=text)
-#export AWS_REGION=$(aws configure get region)
+export EKS_NAME=$(terraform  output -raw eks_name)
+echo "EKS deployed as [$EKS_NAME]"
 
 echo "Connecting kubectl to EKS $TF_VAR_env_name"
-aws eks update-kubeconfig --name "${TF_VAR_env_name}EKS"
+aws eks update-kubeconfig --name "${EKS_NAME}"
 
 echo "Ping K8S"
 kubectl get nodes
 kubectl get svc
 
 echo "K8S is ready!"
-
-

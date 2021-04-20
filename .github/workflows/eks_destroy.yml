@@ -1,32 +1,19 @@
-name: eks_apply
+name: eks_destroy
 
 on:
-  push:
+  delete:
     branches:
       - 'eks/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      TF_VAR_aws_region: us-east-1
-      # https://cloud-images.ubuntu.com/docs/aws/eks/
-      # us-west-2 ami-0fc3ca5b2c5e1fb11
-      # us-east-1 ami-02424b9007c11a4e5
-      TF_VAR_image_id: ami-02424b9007c11a4e5
-      TF_VAR_instance_type: t3a.small
-      TF_VAR_min_size: 1
-      TF_VAR_desired_capacity: 1
-      TF_VAR_max_size: 10
-      TF_VAR_root_size: 32
-      TF_VAR_extra_size: 1
-      TF_VAR_use_spot: false
 
     steps:
       - uses: actions/checkout@v2
       - uses: nelonoel/branch-name@v1.0.1
-      - name: Identify branch and env
-        run: echo "Running on branch ${BRANCH_NAME} env ${TF_VAR_env_name}"
+      - name: Identify branch and environment
+        run: echo "Running on branch ${BRANCH_NAME}"
 
       #TODO: Cache Binaries
       - name: Download kubectl
@@ -78,10 +65,7 @@ jobs:
       - name: Lookup local env
         run: find .
 
-      - name: Run apply script
-        run: ./apply.sh
-        working-directory: eks
-
-      - name: Save terraform state
-        run: ./tf-save.sh
-        working-directory: eks
+#     TODO: Restore terraform state
+#      - name: Run destroy script
+#        run: ./destroy.sh
+#        working-directory: eks

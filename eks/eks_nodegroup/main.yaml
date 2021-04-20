@@ -6,7 +6,7 @@ Parameters:
     Type: String
     Default: DEVENV
   EKSImageId:
-    Type: String
+    Type: AWS::EC2::Image::Id
     Default: "ami-0fc3ca5b2c5e1fb11"
     Description: Ubuntu image id from https://cloud-images.ubuntu.com/aws-eks/
   EKSInstanceType:
@@ -25,10 +25,6 @@ Parameters:
     Description: Node group maximal capacity
     Type: Number
     Default: 10
-  VolumeSize:
-    Description: EBS volume size on nodes
-    Type: Number
-    Default: 80
   BootstrapArguments:
     Type: String
     Default: ""
