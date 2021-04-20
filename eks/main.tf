@@ -101,6 +101,24 @@ module "eks_nodegroup" {
   depends_on = [module.eks_cluster]
 }
 
+module "iam_mapping" {
+  source = "./iam_mapping"
+  cluster_name = module.network.eks_name
+  role_arn = module.eks_cluster.eks_role_arn
+  depends_on = [module.eks_cluster]
+}
+
+module "check_eks_access" {
+  source  = "matti/resource/shell"
+  command = "kubectl get nodes"
+}
+
+module "openebs" {
+  source = "./openebs"
+  cluster_name = module.network.eks_name
+  depends_on = [module.eks_nodegroup]
+}
+
 /* Work In Progress: Kubectl Lambda
 
 module "kubectl_layer" {
@@ -121,12 +139,7 @@ module "kubectl_lambda" {
   depends_on = [module.storage, module.eks_cluster, module.sam_package.stdout]
 }
 
-module "iam_mapping" {
- source = "./iam_mapping"
- env_name = var.env_name
- role_arn = module.kubectl_lambda.kubectl_role_arn
- depends_on = [module.eks_cluster]
-}
+
 
 module "invoke_kubectl_version" {
   source = "./invoke_kubectl"
