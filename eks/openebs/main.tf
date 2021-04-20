@@ -12,7 +12,7 @@ module "use_admin_context" {
 
 module "mainsh" {
   source  = "matti/resource/shell"
-  command = "find ."
+  command = "./openebs/main.sh"
 }
 
 output "create_admin_context_out" {
