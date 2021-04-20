@@ -7,9 +7,12 @@ This repository shares the result of our practice in building Kubernetes based a
 * Kubernetes :)
 * Hashicorp Terraform
 * AWS CloudFormation
-* Amazon EKS
 * GitHub Actions
 
+# Kubernetes Services
+
+* Amazon EKS
+* RedHat OpenShift Service on AWS
 
 # References
 https://github.com/aws-samples/amazon-eks-refarch-cloudformation
