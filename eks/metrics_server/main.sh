@@ -1,3 +1,4 @@
+#!/bin/sh
 echo "Installing metrics server"
 # https://docs.aws.amazon.com/eks/latest/userguide/metrics-server.html
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml

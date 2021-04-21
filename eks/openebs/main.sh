@@ -1,3 +1,4 @@
+#!/bin/sh
 echo "# get current config context "
 KUBE_CTX=$(kubectl config current-context)
 echo "$KUBE_CTX"
