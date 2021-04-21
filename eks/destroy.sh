@@ -2,12 +2,12 @@
 set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-DISTBKT=$(aws cloudformation list-exports --query "Exports[?Name=='BC::${TF_VAR_env_name}::DISTBKT'].Value" --output=text)
+BUCKET=$(terraform output -raw "bucket_name")
 # shellcheck disable=SC2236
-if [ ! -z "$DISTBKT" ]; then
-  DISTBKT_URL="s3://${DISTBKT}/"
-  echo "Emptying $DISTBKT_URL"
-  aws s3 rm "$DISTBKT_URL" --recursive
+if [ ! -z "$BUCKET" ]; then
+  BUCKET_URL="s3://${BUCKET}/"
+  echo "Emptying $BUCKET_URL"
+  aws s3 rm "$BUCKET_URL" --recursive
 fi
 
 echo "Destroying"

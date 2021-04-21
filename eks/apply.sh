@@ -27,7 +27,7 @@ terraform apply -auto-approve
 terraform output > .terraform.outputs.txt
 popd
 
-export EKS_NAME=$(terraform  output -raw eks_name)
+export EKS_NAME=$(terraform output -raw "eks_name")
 echo "EKS deployed as [$EKS_NAME]"
 
 echo "Connecting kubectl to EKS $TF_VAR_env_name"
