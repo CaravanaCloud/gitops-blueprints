@@ -4,6 +4,7 @@ terraform {
       version = "~> 3.0"
     }
   }
+#TODO:  backend "s3" {}
 }
 
 
@@ -74,11 +75,6 @@ provider "aws" {
 
 module "iam_admin" {
   source = "./iam_admin"
-  env_name = var.env_name
-}
-
-module "storage" {
-  source = "./storage"
   env_name = var.env_name
 }
 
