@@ -29,9 +29,7 @@ jobs:
           VALIDATE_PYTHON_ISORT: false
           VALIDATE_JAVA: false
           VALIDATE_HTML: false
-          #
           VALIDATE_BASH: true
-          #
           OUTPUT_FORMAT: tap
           OUTPUT_FOLDER: target/super-linter
 
