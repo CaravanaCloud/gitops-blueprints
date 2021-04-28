@@ -25,6 +25,13 @@ Parameters:
     Description: Node group maximal capacity
     Type: Number
     Default: 10
+  CapacityType:
+    Description: The capacity type of your managed node group.
+    Type: String
+    Default: "ON_DEMAND"
+    AllowedValues:
+      - "ON_DEMAND"
+      - "SPOT"
   BootstrapArguments:
     Type: String
     Default: ""
@@ -109,6 +116,7 @@ Resources:
         Fn::ImportValue:
           !Sub "BC::${EnvName}::EKS"
       NodeRole: !GetAtt EKSNodeRole.Arn
+      CapacityType: !Ref CapacityType
       ScalingConfig:
         MinSize: !Ref MinSize
         DesiredSize: !Ref DesiredCapacity

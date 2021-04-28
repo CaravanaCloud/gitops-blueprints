@@ -8,6 +8,8 @@ variable "root_size" {}
 variable "root_device" {}
 variable "extra_size" {}
 variable "extra_device" {}
+variable "aws_nuke" {}
+variable "capacity_type" {}
 
 
 resource "aws_cloudformation_stack" "eks_nodegroup" {
@@ -23,7 +25,11 @@ resource "aws_cloudformation_stack" "eks_nodegroup" {
     RootVolDevice = var.root_device
     ExtraVolSize = var.extra_size
     ExtraVolDevice = var.extra_device
+    CapacityType = var.capacity_type
   }
   capabilities = ["CAPABILITY_IAM"]
   template_body = file("${path.module}/main.yaml")
+  tags = {
+    aws-nuke = var.aws_nuke
+  }
 }

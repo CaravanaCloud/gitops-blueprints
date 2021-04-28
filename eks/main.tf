@@ -4,7 +4,7 @@ terraform {
       version = "~> 3.0"
     }
   }
-#TODO:  backend "s3" {}
+  backend "s3" {}
 }
 
 
@@ -41,7 +41,7 @@ variable "max_size" {
 
 variable "instance_type" {
   type    = string
-  default = "t3.medium"
+  default = "t3a.medium"
 }
 
 variable "image_id" {
@@ -69,6 +69,16 @@ variable "extra_device" {
   default = "/dev/sdh"
 }
 
+variable "aws_nuke" {
+  type = string
+  default = "true"
+}
+
+variable "capacity_type" {
+  type = string
+  default = "ON_DEMAND"
+}
+
 provider "aws" {
   region = var.aws_region
 }
@@ -76,17 +86,20 @@ provider "aws" {
 module "iam_admin" {
   source = "./iam_admin"
   env_name = var.env_name
+  aws_nuke = var.aws_nuke
 }
 
 module "network" {
   source = "./network"
   env_name = var.env_name
+  aws_nuke = var.aws_nuke
 }
 
 module "eks_cluster" {
   source = "./eks_cluster"
   env_name = var.env_name
   depends_on = [module.network]
+  aws_nuke = var.aws_nuke
 }
 
 module "eks_nodegroup" {
@@ -101,6 +114,8 @@ module "eks_nodegroup" {
   root_device = var.root_device
   extra_size = var.extra_size
   extra_device = var.extra_device
+  aws_nuke = var.aws_nuke
+  capacity_type = var.capacity_type
   depends_on = [module.eks_cluster]
 }
 
@@ -111,15 +126,22 @@ module "iam_mapping" {
   depends_on = [module.eks_cluster]
 }
 
-module "check_eks_access" {
+module "eks_ready" {
+  source  = "matti/resource/shell"
+  command = "aws eks update-kubeconfig --name ${module.network.eks_name}"
+  depends_on = [module.eks_nodegroup]
+}
+
+module "eks_ping" {
   source  = "matti/resource/shell"
   command = "kubectl get nodes"
+  depends_on = [module.eks_ready]
 }
 
 module "openebs" {
   source = "./openebs"
   cluster_name = module.network.eks_name
-  depends_on = [module.eks_nodegroup]
+  depends_on = [module.eks_ready]
 }
 
 /* Work In Progress: Kubectl Lambda

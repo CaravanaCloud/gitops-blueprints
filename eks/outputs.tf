@@ -1,7 +1,3 @@
-output "bucket_name" {
-  value = module.storage.bucket_name
-}
-
 output "eks_name" {
   value = module.network.eks_name
 }
@@ -46,20 +42,16 @@ output "create_iam_mapping_out" {
   value = module.iam_mapping.create_iam_mapping_out
 }
 
-output "check_eks_access_out" {
-  value = module.check_eks_access.stdout
+output "eks_ready_out" {
+  value = module.eks_ready.stdout
 }
 
-output "create_admin_context_out" {
-  value = module.openebs.create_admin_context_out
+output "eks_ping_out" {
+  value = module.eks_ping.stdout
 }
 
-output "use_admin_context_out" {
-  value = module.openebs.use_admin_context_out
-}
-
-output "mainsh_out" {
-  value = module.openebs.mainsh_out
+output "oebs_out" {
+  value = module.openebs.oebs_out
 }
 
 
