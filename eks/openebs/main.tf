@@ -1,3 +1,4 @@
+# https://docs.openebs.io/docs/next/postgres.html
 # https://docs.openebs.io/docs/next/installation.html
 variable "cluster_name" {}
 
@@ -46,30 +47,60 @@ module "helm_ls" {
   command = "helm ls"
 }
 
+module "wait_install" {
+  source  = "matti/resource/shell"
+  command = "sleep 15"
+}
+
 module "oebs_pods"{
   source  = "matti/resource/shell"
   command = "kubectl get pods -n openebs"
+  depends_on = [module.wait_install]
 }
 
 module "oebs_blockdevices"{
   source  = "matti/resource/shell"
   command = "kubectl get blockdevice -n openebs"
+  depends_on = [module.wait_install]
 }
 
 module "oebs_blockdevices_list"{
   source  = "matti/resource/shell"
-  command = "kubectl get blockdevice -n openebs -o=jsonpath='{range.items[*]}{\"    - \"}{.metadata.name}{\"\n\"}{end}'"
+  command = "kubectl get blockdevice -n openebs -o jsonpath='{range.items[*]}{\"    - \"}{.metadata.name}{\"\n\"}{end}'"
+  depends_on = [module.wait_install]
 }
 
 resource "local_file" "cstor-pool1-config" {
   content     = templatefile("${path.module}/cstor-pool1-config.tpl", { blockDeviceList: module.oebs_blockdevices_list.stdout })
   filename = "${path.module}/cstor-pool1-config.out.yaml"
+  depends_on = [module.oebs_blockdevices_list]
 }
 
 module "oebs_blockdevices_claimfile"{
   source  = "matti/resource/shell"
   command = "cat cstor-pool1-config.out.yaml"
 }
+
+module "oebs_blockdevices_claim_csp"{
+  source  = "matti/resource/shell"
+  command = "kubectl apply -f cstor-pool1-config.out.yaml"
+}
+
+module "wait_claim" {
+  source  = "matti/resource/shell"
+  command = "sleep 15"
+}
+
+module "oebs_verify_spc"{
+  source  = "matti/resource/shell"
+  command = "kubectl get spc"
+}
+
+module "oebs_verify_csp"{
+  source  = "matti/resource/shell"
+  command = "kubectl get csp"
+}
+
 
 output "oebs_out" {
   value = <<EOT
@@ -107,15 +138,60 @@ output "oebs_out" {
 
   # kubectl get pods -n openebs
   ${module.oebs_pods.stdout}
+  ## exit status
+  ${module.oebs_pods.exitstatus}
+  ## std err
+  ${module.oebs_pods.stderr}
 
   # kubectl get blockdevice -n openebs
   ${module.oebs_blockdevices.stdout}
+  ## exit status
+  ${module.oebs_blockdevices.exitstatus}
+  ## std err
+  ${module.oebs_blockdevices.stderr}
+
 
   # oebs_blockdevices_list
   ${module.oebs_blockdevices_list.stdout}
+  ## exit status
+  ${module.oebs_blockdevices_list.exitstatus}
+  ## std err
+  ${module.oebs_blockdevices_list.stderr}
 
   # oebs_blockdevices_claimfile
   ${module.oebs_blockdevices_claimfile.stdout}
+  ## exit status
+  ${module.oebs_blockdevices_claimfile.exitstatus}
+  ## std err
+  ${module.oebs_blockdevices_claimfile.stderr}
+
+  # oebs_blockdevices_claim_csp
+  ${module.oebs_blockdevices_claim_csp.stdout}
+  ## exit status
+  ${module.oebs_blockdevices_claim_csp.exitstatus}
+  ## std err
+  ${module.oebs_blockdevices_claim_csp.stderr}
+
+  # oebs_blockdevices_claim_csp
+  ${module.oebs_blockdevices_claim_csp.stdout}
+  ## exit status
+  ${module.oebs_blockdevices_claim_csp.exitstatus}
+  ## std err
+  ${module.oebs_blockdevices_claim_csp.stderr}
+
+  # oebs_verify_csp
+  ${module.oebs_verify_csp.stdout}
+  ## exit status
+  ${module.oebs_verify_csp.exitstatus}
+  ## std err
+  ${module.oebs_verify_csp.stderr}
+
+  # oebs_verify_csp
+  ${module.oebs_verify_csp.stdout}
+  ## exit status
+  ${module.oebs_verify_csp.exitstatus}
+  ## std err
+  ${module.oebs_verify_csp.stderr}
 
   EOT
 }

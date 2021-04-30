@@ -89,6 +89,12 @@ module "iam_admin" {
   aws_nuke = var.aws_nuke
 }
 
+module "storage" {
+  source = "./storage"
+  env_name = var.env_name
+  aws_nuke = var.aws_nuke
+}
+
 module "network" {
   source = "./network"
   env_name = var.env_name
