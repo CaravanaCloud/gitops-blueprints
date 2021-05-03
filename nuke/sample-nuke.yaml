@@ -1,3 +1,11 @@
+---
+feature-flags:
+  disable-deletion-protection:
+    RDSInstance: true
+    EC2Instance: true
+    CloudformationStack: true
+  force-delete-lightsail-addons: true
+
 regions:
   - eu-north-1
   - ap-south-1
@@ -67,4 +75,56 @@ account-blocklist:
   - "999999999999" # production
 
 accounts:
-  "192912639870": {} # sandbox
+  "192912639870": # sandbox
+    filters:
+      IAMUser:
+        - "dalek"
+      IAMUserPolicyAttachment:
+        - "dalek -> AdministratorAccess"
+      IAMUserAccessKey:
+        - property: UserName
+          value: "dalek"
+      CloudFormationStack:
+        - property: "tag:aws-nuke"
+          value: "false"
+        - property: "Name"
+          value: "CDKToolkit"
+      EC2Instance:
+        - property: "tag:aws-nuke"
+          value: "false"
+      EC2InternetGateway:
+        - property: "tag:aws-nuke"
+          value: "false"
+      S3Bucket:
+        - property: "tag:aws:cloudformation:stack-name"
+          value: "CDKToolkit"
+
+#  Tag Resurces
+#  DynamoDBTable
+#  EC2DHCPOption
+#  EC2Image
+#  EC2InternetGatewayAttachment
+#  EC2NATGateway
+#  EC2RouteTable
+#  EC2Subnet
+#  EC2TGW
+#  EC2TGWAttachment
+#  EC2VPC
+#  EC2VPCEndpoint
+#  EC2VPNConnection
+#  EC2VPNGatewayAttachment
+#  EC2Volume
+#  ELB
+#  ELBv2
+#  ELBv2TargetGroup
+#  FSxBackup
+#  FSxFileSystem
+#  IAMRolePolicy
+#  LambdaFunction
+#  RDSDBCluster
+#  RDSDBClusterParameterGroup
+#  RDSDBParameterGroup
+#  RDSDBSubnetGroup
+#  RDSInstance
+#  RDSSnapshot
+#

@@ -81,7 +81,3 @@ jobs:
       - name: Run apply script
         run: ./apply.sh
         working-directory: eks
-
-      - name: Save terraform state
-        run: ./tf-save.sh
-        working-directory: eks

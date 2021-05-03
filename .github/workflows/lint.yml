@@ -18,7 +18,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_MARKDOWN: false
           VALIDATE_SQL: false
-          VALIDATE_BASH: false
           VALIDATE_CSS: false
           VALIDATE_ENV: false
           VALIDATE_DOCKERFILE: false
@@ -28,12 +27,13 @@ jobs:
           VALIDATE_PYTHON_BLACK: false
           VALIDATE_PYTHON_FLAKE8: false
           VALIDATE_PYTHON_ISORT: false
-          #
           VALIDATE_JAVA: false
           VALIDATE_HTML: false
-          #
           OUTPUT_FORMAT: tap
           OUTPUT_FOLDER: target/super-linter
 
-      - name: Check super linter report
-        run: find .
+      - name: Archive linter results
+        uses: actions/upload-artifact@v2
+        with:
+          name: linter-report
+          path: target/super-linter/

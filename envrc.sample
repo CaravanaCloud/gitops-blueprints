@@ -1,0 +1,13 @@
+export TF_VAR_aws_region=us-east-1
+export TF_VAR_env_name=JUL/13
+# https://cloud-images.ubuntu.com/aws-eks/
+export TF_VAR_image_id=ami-0fc3ca5b2c5e1fb11
+export TF_VAR_instance_type=t3a.small
+export TF_VAR_min_size=1
+export TF_VAR_desired_capacity=1
+export TF_VAR_max_size=10
+export TF_VAR_root_size=32
+export TF_VAR_extra_size=1
+export TF_VAR_use_spot=true
+
+export AWS_PROFILE=sandbox
