@@ -46,8 +46,8 @@ output "eks_ready_out" {
   value = module.eks_ready.stdout
 }
 
-output "eks_ping_out" {
-  value = module.eks_ping.stdout
+output "eks_kubeconfig_out" {
+  value = module.eks_update_kubeconfig.stdout
 }
 
 output "oebs_out" {

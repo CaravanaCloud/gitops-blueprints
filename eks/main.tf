@@ -7,21 +7,15 @@ terraform {
   backend "s3" {}
 }
 
+provider "aws" {}
 
 variable "env_name" {
   type    = string
-  default = "tfenv"
 
   validation {
-    #TODO Actual supported regex is [A-Za-z0-9\-_]*
-    condition     = can(regex("[A-Za-z0-9]*", var.env_name))
+    condition     = can(regex("[A-Za-z0-9-]*", var.env_name))
     error_message = "Environment name must satisfy regular expression pattern '[A-Za-z0-9]*-' ."
   }
-}
-
-variable "aws_region" {
-  type    = string
-  default = "eu-west-1"
 }
 
 variable "min_size" {
@@ -79,8 +73,8 @@ variable "capacity_type" {
   default = "ON_DEMAND"
 }
 
-provider "aws" {
-  region = var.aws_region
+module "helm_install" {
+  source = "./helm_install"
 }
 
 module "iam_admin" {
@@ -132,16 +126,16 @@ module "iam_mapping" {
   depends_on = [module.eks_cluster]
 }
 
-module "eks_ready" {
+module "eks_update_kubeconfig" {
   source  = "matti/resource/shell"
   command = "aws eks update-kubeconfig --name ${module.network.eks_name}"
   depends_on = [module.eks_nodegroup]
 }
 
-module "eks_ping" {
+module "eks_ready" {
   source  = "matti/resource/shell"
   command = "kubectl get nodes"
-  depends_on = [module.eks_ready]
+  depends_on = [module.eks_update_kubeconfig]
 }
 
 module "openebs" {
