@@ -1,0 +1,14 @@
+export TF_VAR_tf_bucket=tf.caravana.cloud
+export TF_VAR_aws_region=us-east-1
+export TF_VAR_env_suffix=X1
+# https://cloud-images.ubuntu.com/aws-eks/
+export TF_VAR_image_id=ami-0867595662277d4d0
+export TF_VAR_instance_type=t3a.medium
+export TF_VAR_min_size=3
+export TF_VAR_desired_capacity=3
+export TF_VAR_max_size=10
+export TF_VAR_root_size=32
+export TF_VAR_extra_size=1
+export TF_VAR_use_spot=true
+export TF_VAR_aws_nuke=true
+¡
