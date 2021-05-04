@@ -36,6 +36,9 @@ jobs:
             -backend-config="bucket=$TF_BUCKET" \
             -backend-config="key=$TF_KEY" \
             -backend-config="region=$TF_REGION"
+          echo "Terraform initialized"
+          sleep 3
+          terraform output
         working-directory: infra/aws/bucket
 
       - name: Bucket cleanup
