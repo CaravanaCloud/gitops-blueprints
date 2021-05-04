@@ -40,5 +40,8 @@ jobs:
 
       - name: Terraform apply
         run: |
+          echo "Applying state from branch [$TF_VAR_branch_name]"
           terraform apply -auto-approve
         working-directory: infra/aws/bucket
+        env:
+          TF_VAR_branch_name: ${{env.BRANCH_NAME}}
