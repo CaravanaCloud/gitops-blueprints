@@ -1,9 +1,6 @@
 name: bucket_delete
 
-on:
-  delete:
-    branches:
-      - 'bucket/**'
+on: delete
 
 jobs:
   build:
@@ -11,16 +8,16 @@ jobs:
     env:
       TF_BUCKET: ${{ secrets.TF_BUCKET }}
       TF_REGION: ${{ secrets.TF_REGION }}
+      BRANCH_NAME: ${{ github.event.ref }}
 
     steps:
       - uses: actions/checkout@v2
-      - uses: nelonoel/branch-name@v1.0.1
 
       - name: Debug variables
         run: |
           echo "branch ${BRANCH_NAME}"
           echo "event ref ${{ github.event.ref }}"
-          echo "ref type ${{ github.event.ref_type }}""
+          echo "ref type ${{ github.event.ref_type }}"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -48,12 +45,11 @@ jobs:
           aws s3api put-bucket-versioning --bucket "$BUCKET_NAME"  --versioning-configuration "Status=Suspended"
           aws s3api delete-bucket-policy --bucket "$BUCKET_NAME"
           aws s3 rm "s3://$BUCKET_NAME" --recursive
-#          aws s3 rb "s3://$BUCKET_NAME"
 
-#      - name: Terraform destroy
-#        run: |
-#          echo "Destroying state from branch [$TF_VAR_branch_name]"
-#          terraform destroy -auto-approve
-#        working-directory: infra/aws/bucket
-#        env:
-#          TF_VAR_branch_name: ${{env.BRANCH_NAME}}
+      - name: Terraform destroy
+        run: |
+          echo "Destroying state from branch [$TF_VAR_branch_name]"
+          terraform destroy -auto-approve
+        working-directory: infra/aws/bucket
+        env:
+          TF_VAR_branch_name: ${{ env.BRANCH_NAME }}
