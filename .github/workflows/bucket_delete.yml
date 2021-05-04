@@ -1,9 +1,9 @@
-name: bucket_push
+name: bucket_delete
 
 on:
-  push:
+  delete:
     branches:
-      - 'bucket/**'
+      - 'eks/**'
 
 jobs:
   build:
@@ -38,22 +38,19 @@ jobs:
             -backend-config="region=$TF_REGION"
         working-directory: infra/aws/bucket
 
-      - name: Terraform apply
+      - name: Bucket cleanup
         run: |
-          echo "Applying state from branch [$TF_VAR_branch_name]"
-          terraform apply -auto-approve
+          BUCKET_NAME=$(terraform output simple_bucket_name)
+          echo "Cleanup bucket [$BUCKET_NAME]"
+          aws s3api put-bucket-versioning --bucket "$BUCKET_NAME"  --versioning-configuration "Status=Suspended"
+          aws s3api delete-bucket-policy --bucket "$BUCKET_NAME"
+          aws s3 rm "s3://$BUCKET_NAME" --recursive
+          aws s3 rb "s3://$BUCKET_NAME"
+
+      - name: Terraform destroy
+        run: |
+          echo "Destroying state from branch [$TF_VAR_branch_name]"
+          terraform destroy -auto-approve
         working-directory: infra/aws/bucket
         env:
           TF_VAR_branch_name: ${{env.BRANCH_NAME}}
-
-      - name: Terraform output
-        run: |
-          terraform output > terraform_outputs.txt
-          cat terraform_outputs.txt
-        working-directory: infra/aws/bucket
-
-      - name: Archive outputs
-        uses: actions/upload-artifact@v2
-        with:
-          name: outputs-txt
-          path: infra/aws/bucket/terraform_outputs.txt
