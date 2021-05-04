@@ -48,7 +48,8 @@ jobs:
 
       - name: Terraform output
         run: |
-          terraform output > "terraform_outputs.txt"
+          terraform output > terraform_outputs.txt
+          cat terraform_outputs.txt
         working-directory: infra/aws/bucket
 
       - name: Archive outputs
