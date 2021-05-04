@@ -1,0 +1,44 @@
+name: bucket_push
+
+on:
+  push:
+    branches:
+      - 'bucket/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TF_BUCKET: ${{ secrets.TF_BUCKET }}
+      TF_REGION: ${{ secrets.TF_REGION }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: nelonoel/branch-name@v1.0.1
+
+      - name: Identify branch
+        run: echo "Running on branch ${BRANCH_NAME}"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: Check AWS authentication
+        run: aws sts get-caller-identity
+
+      - name: Terraform init
+        run: |
+          TF_KEY="terraform/${BRANCH_NAME}/state"
+          echo "Loading state from s3://${BUCKET}/${KEY}"
+          terraform init -upgrade -force-copy \
+            -backend-config="bucket=$TF_BUCKET" \
+            -backend-config="key=$TF_KEY" \
+            -backend-config="region=$TF_REGION"
+        working-directory: infra/aws/bucket
+
+      - name: Terraform apply
+        run: |
+          terraform apply -auto-approve
+        working-directory: infra/aws/bucket

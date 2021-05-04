@@ -1,7 +1,7 @@
 .idea/
 .envrc
 target
-nuke/aws-nuke
+infra/nuke/aws-nuke
 
 .terraform.*
 terraform.*

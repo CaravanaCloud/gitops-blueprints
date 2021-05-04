@@ -1,0 +1,26 @@
+Description: A simple S3 bucket
+
+Parameters:
+  EnvName:
+    Type: String
+  BucketNameSuffix:
+    Type: String
+    Default: ".k8s-blueprints"
+
+Resources:
+  SimpleBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub "${EnvName}${BucketNameSuffix}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+Outputs:
+  SimpleBucketName:
+    Description: Created Bucket Name
+    Value: !Ref SimpleBucket
+    Export:
+      Name: !Sub "CC::${EnvName}::SimpleBucket"

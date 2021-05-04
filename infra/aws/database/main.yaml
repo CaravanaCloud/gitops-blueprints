@@ -1,0 +1,47 @@
+Description: Networking resources for the eks cluster
+
+Parameters:
+  EnvName:
+    Type: String
+  SubnetIds:
+    Type: CommaDelimitedList
+  MasterUsername:
+    Type: String
+  MasterUserPassword:
+    Type: String
+  VpcSecurityGroupIds:
+    Type: CommaDelimitedList
+  DBInstanceClass:
+    Type: String
+    Default: db.t3.medium
+
+Resources:
+  DatabaseSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet Group for RDS Aurora
+      SubnetIds: !Ref SubnetIds
+
+  DatabaseCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora
+      MasterUsername: !Ref "MasterUsername"
+      MasterUserPassword: !Ref "MasterUserPassword"
+      DBSubnetGroupName: !Ref "DatabaseSubnetGroup"
+      VpcSecurityGroupIds: !Ref "VpcSecurityGroupIds"
+
+  DatabasePrimaryInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: aurora
+      DBClusterIdentifier: !Ref "DatabaseCluster"
+      DBInstanceClass: !Ref DBInstanceClass
+      DBSubnetGroupName: !Ref "DatabaseSubnetGroup"
+
+Outputs:
+  DatabaseClusterId:
+    Description: DatabaseClusterId
+    Value: !Ref DatabaseCluster
+    Export:
+      Name: !Sub "CC::${EnvName}::DBID"
