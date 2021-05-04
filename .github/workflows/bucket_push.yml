@@ -31,7 +31,7 @@ jobs:
       - name: Terraform init
         run: |
           TF_KEY="terraform/${BRANCH_NAME}/state"
-          echo "Loading state from s3://${BUCKET}/${KEY}"
+          echo "Loading state from [$TF_REGION] s3://${$TF_BUCKET}/${TF_KEY}"
           terraform init -upgrade -force-copy \
             -backend-config="bucket=$TF_BUCKET" \
             -backend-config="key=$TF_KEY" \
