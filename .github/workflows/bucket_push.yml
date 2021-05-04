@@ -45,3 +45,14 @@ jobs:
         working-directory: infra/aws/bucket
         env:
           TF_VAR_branch_name: ${{env.BRANCH_NAME}}
+
+      - name: Terraform output
+        run: |
+          terraform output > "terraform_outputs.txt"
+        working-directory: infra/aws/bucket
+
+      - name: Archive outputs
+        uses: actions/upload-artifact@v2
+        with:
+          name: outputs-txt
+          path: terraform_outputs.txt
