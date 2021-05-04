@@ -56,4 +56,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: outputs-txt
-          path: terraform_outputs.txt
+          path: infra/aws/bucket/terraform_outputs.txt
