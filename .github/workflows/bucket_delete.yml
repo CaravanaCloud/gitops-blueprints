@@ -3,7 +3,7 @@ name: bucket_delete
 on:
   delete:
     branches:
-      - 'eks/**'
+      - 'bucket/**'
 
 jobs:
   build:
