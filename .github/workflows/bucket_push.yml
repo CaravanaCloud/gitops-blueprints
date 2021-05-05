@@ -46,18 +46,17 @@ jobs:
         env:
           TF_VAR_branch_name: ${{env.BRANCH_NAME}}
 
-      - name: Terraform output
+      - name: Get outputs from terraform
         run: |
           terraform output > terraform_outputs.txt
           cat terraform_outputs.txt
+          echo "SIMPLE_BUCKET_NAME=$(terraform output simple_bucket_name)" >> $GITHUB_ENV
         working-directory: infra/aws/bucket
 
       - name: S3 Check
         run: |
-            BUCKET_NAME=$(terraform output simple_bucket_name)
-            echo "aws s3 ls s3://${BUCKET_NAME}"
-            echo "aws s3 xs s3://trialh.k8s-blueprints"
-            aws s3 ls "s3://$BUCKET_NAME"
+            echo "aws s3 ls s3://${env.SIMPLE_BUCKET_NAME}"
+            aws s3 ls "s3://${env.SIMPLE_BUCKET_NAME}"
         working-directory: infra/aws/bucket
 
       - name: Archive outputs
