@@ -28,7 +28,7 @@ jobs:
       - name: Check AWS authentication
         run: aws sts get-caller-identity
 
-      - name: Terraform init
+      - name: Terraform version
         run: terraform version
         working-directory: infra/aws/bucket
 
@@ -42,8 +42,8 @@ jobs:
             -backend-config="region=$TF_REGION"
           echo "Terraform initialized"
           sleep 3
-          terraform refresh
           terraform output
+          echo "SIMPLE_BUCKET_NAME=$(terraform output simple_bucket_name)" >> $GITHUB_ENV
           echo "Terraform state refreshed"
         working-directory: infra/aws/bucket
         env:
@@ -51,12 +51,10 @@ jobs:
 
       - name: Bucket cleanup
         run: |
-          terraform output simple_bucket_name
-          BUCKET_NAME=$(terraform output simple_bucket_name)
-          echo "Cleanup bucket [$BUCKET_NAME]"
-          aws s3api put-bucket-versioning --bucket "$BUCKET_NAME"  --versioning-configuration "Status=Suspended"
-          aws s3api delete-bucket-policy --bucket "$BUCKET_NAME"
-          aws s3 rm "s3://$BUCKET_NAME" --recursive
+          echo "Cleanup bucket [${{env.BUCKET_NAME}}]"
+          aws s3api put-bucket-versioning --bucket "${{env.BUCKET_NAME}}"  --versioning-configuration "Status=Suspended"
+          aws s3api delete-bucket-policy --bucket "${{env.BUCKET_NAME}}"
+          aws s3 rm "s3://${{env.BUCKET_NAME}}" --recursive
         working-directory: infra/aws/bucket
 
       - name: Terraform destroy
