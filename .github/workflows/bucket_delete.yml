@@ -45,6 +45,8 @@ jobs:
           terraform output
           echo "Terraform state refreshed"
         working-directory: infra/aws/bucket
+        env:
+          TF_VAR_branch_name: ${{ env.BRANCH_NAME }}
 
       - name: Bucket cleanup
         run: |
