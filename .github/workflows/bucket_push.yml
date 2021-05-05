@@ -28,9 +28,12 @@ jobs:
       - name: Check AWS authentication
         run: aws sts get-caller-identity
 
+      - name: Terraform backend key
+        run: |
+          echo "TF_KEY=terraform/${BRANCH_NAME}/state" >> $GITHUB_ENV
+
       - name: Terraform init
         run: |
-          TF_KEY="terraform/${BRANCH_NAME}/state"
           echo "Loading state from [$TF_REGION] s3://${TF_BUCKET}/${TF_KEY}"
           terraform init -upgrade -force-copy \
             -backend-config="bucket=$TF_BUCKET" \
@@ -40,7 +43,7 @@ jobs:
 
       - name: Terraform apply
         run: |
-          echo "Applying state from branch [$TF_VAR_branch_name]"
+          echo "Applying state from branch [${{env.TF_VAR_branch_name}}]"
           terraform apply -auto-approve
         working-directory: infra/aws/bucket
         env:
