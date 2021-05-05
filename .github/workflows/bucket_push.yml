@@ -57,7 +57,7 @@ jobs:
             BUCKET_NAME=$(terraform output simple_bucket_name)
             echo "aws s3 ls s3://${BUCKET_NAME}"
             echo "aws s3 xs s3://trialh.k8s-blueprints"
-            aws s3 ls "s3://$BUCKET_NAME"
+            aws s3 ls "s3://$(terraform output simple_bucket_name)"
         working-directory: infra/aws/bucket
 
       - name: Archive outputs
