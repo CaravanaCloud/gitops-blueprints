@@ -46,7 +46,7 @@ jobs:
         env:
           TF_VAR_branch_name: ${{env.BRANCH_NAME}}
 
-      - name: Terraform output
+      - name: Get outputs from terraform
         run: |
           terraform output > terraform_outputs.txt
           cat terraform_outputs.txt
@@ -55,8 +55,8 @@ jobs:
 
       - name: S3 Check
         run: |
-            echo "aws s3 ls s3://${{env.BUCKET_NAME}}"
-            aws s3 ls "s3://${{env.BUCKET_NAME}}"
+            echo "aws s3 ls s3://${{env.SIMPLE_BUCKET_NAME}}"
+            aws s3 ls "s3://${{env.SIMPLE_BUCKET_NAME}}"
         working-directory: infra/aws/bucket
 
       - name: Archive outputs
