@@ -55,8 +55,8 @@ jobs:
 
       - name: S3 Check
         run: |
-            echo "aws s3 ls s3://${env.SIMPLE_BUCKET_NAME}"
-            aws s3 ls "s3://${env.SIMPLE_BUCKET_NAME}"
+            echo "aws s3 ls s3://${{env.SIMPLE_BUCKET_NAME}}"
+            aws s3 ls "s3://${{env.SIMPLE_BUCKET_NAME}}"
         working-directory: infra/aws/bucket
 
       - name: Archive outputs
