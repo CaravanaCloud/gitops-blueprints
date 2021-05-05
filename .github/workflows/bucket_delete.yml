@@ -61,3 +61,5 @@ jobs:
           echo "Destroying state from branch [${{ env.BRANCH_NAME }}]"
           terraform destroy -auto-approve
         working-directory: infra/aws/bucket
+        env:
+          TF_VAR_branch_name: ${{ env.BRANCH_NAME }}
