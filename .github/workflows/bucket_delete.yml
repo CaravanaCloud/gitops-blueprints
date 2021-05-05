@@ -30,6 +30,7 @@ jobs:
 
       - name: Terraform init
         run: terraform version
+        working-directory: infra/aws/bucket
 
       - name: Terraform init
         run: |
@@ -56,6 +57,7 @@ jobs:
           aws s3api put-bucket-versioning --bucket "$BUCKET_NAME"  --versioning-configuration "Status=Suspended"
           aws s3api delete-bucket-policy --bucket "$BUCKET_NAME"
           aws s3 rm "s3://$BUCKET_NAME" --recursive
+        working-directory: infra/aws/bucket
 
       - name: Terraform destroy
         run: |
