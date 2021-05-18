@@ -12,5 +12,5 @@ if [ ! -f ./aws-nuke ]; then
     echo "aws-nuke downloaded"
 fi
 
-./aws-nuke -c ./sample-nuke.yaml --profile sandbox --no-dry-run --force  --force-sleep 3
+./aws-nuke -c ./sample-nuke.yaml --no-dry-run --force  --force-sleep 3
 popd

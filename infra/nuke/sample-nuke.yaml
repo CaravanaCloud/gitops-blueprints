@@ -33,6 +33,18 @@ resource-types:
     - CloudFormationType
     - ElasticBeanstalkApplication
     - ElasticBeanstalkEnvironment
+    - LambdaEventSourceMapping
+    - LambdaFunction
+    - LambdaLayer
+    - SageMakerApp
+    - SageMakerDomain
+    - SageMakerEndpoint
+    - SageMakerEndpointConfig
+    - SageMakerModel
+    - SageMakerNotebookInstance
+    - SageMakerNotebookInstanceLifecycleConfig
+    - SageMakerNotebookInstanceState
+    - SageMakerUserProfiles
     - EC2Address
     - EC2ClientVpnEndpoint
     - EC2ClientVpnEndpointAttachment

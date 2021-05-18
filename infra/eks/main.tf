@@ -74,36 +74,40 @@ variable "capacity_type" {
 }
 
 module "helm_install" {
-  source = "helm_install"
+  source = "./helm_install"
+}
+
+module "kubectl_install" {
+  source = "./kubectl_install"
 }
 
 module "iam_admin" {
-  source = "iam_admin"
+  source = "./iam_admin"
   env_name = var.env_name
   aws_nuke = var.aws_nuke
 }
 
 module "storage" {
-  source = "storage"
+  source = "./storage"
   env_name = var.env_name
   aws_nuke = var.aws_nuke
 }
 
 module "network" {
-  source = "..\/aws\/network"
+  source = "../aws/network"
   env_name = var.env_name
   aws_nuke = var.aws_nuke
 }
 
 module "eks_cluster" {
-  source = "eks_cluster"
+  source = "./eks_cluster"
   env_name = var.env_name
   depends_on = [module.network]
   aws_nuke = var.aws_nuke
 }
 
 module "eks_nodegroup" {
-  source = "eks_nodegroup"
+  source = "./eks_nodegroup"
   env_name = var.env_name
   min_size = var.min_size
   desired_capacity = var.desired_capacity
@@ -120,7 +124,7 @@ module "eks_nodegroup" {
 }
 
 module "iam_mapping" {
-  source = "iam_mapping"
+  source = "./iam_mapping"
   cluster_name = module.network.eks_name
   role_arn = module.eks_cluster.eks_role_arn
   depends_on = [module.eks_cluster]
@@ -139,7 +143,7 @@ module "eks_ready" {
 }
 
 module "openebs" {
-  source = "openebs"
+  source = "./openebs"
   cluster_name = module.network.eks_name
   depends_on = [module.eks_ready]
 }
