@@ -11,8 +11,6 @@ jobs:
     env:
       TF_VAR_aws_region: us-east-1
       # https://cloud-images.ubuntu.com/docs/aws/eks/
-      # us-west-2 ami-0fc3ca5b2c5e1fb11
-      # us-east-1 ami-02424b9007c11a4e5
       TF_VAR_image_id: ami-02424b9007c11a4e5
       TF_VAR_instance_type: t3a.small
       TF_VAR_min_size: 1
