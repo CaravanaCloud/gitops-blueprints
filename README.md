@@ -1,4 +1,4 @@
-# K8s Blueprints
+# K8s & GitOps Blueprints
 
 This repository shares the result of our practice in building Kubernetes based applications and their cloud deployments.
 
