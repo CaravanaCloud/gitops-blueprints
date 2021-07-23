@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      TF_VAR_aws_region: us-east-1
+      TF_VAR_aws_region: ${{ secrets.TF_REGION }}
       # https://cloud-images.ubuntu.com/docs/aws/eks/
       TF_VAR_image_id: ami-02424b9007c11a4e5
       TF_VAR_instance_type: t3a.small
@@ -69,7 +69,8 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
+          aws-region: ${{TF_VAR_aws_region}}
+
       - name: Check AWS authentication
         run: aws sts get-caller-identity
 
