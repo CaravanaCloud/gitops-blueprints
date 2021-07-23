@@ -1,4 +1,4 @@
-name: eks_apply
+name: eks_ubuntu_apply
 
 on:
   push:
