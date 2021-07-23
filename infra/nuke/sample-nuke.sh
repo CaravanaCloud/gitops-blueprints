@@ -3,8 +3,8 @@ pushd $DIR
 
 if [ ! -f ./aws-nuke ]; then
     echo "./aws-nuke not found, downloading..."
-    NUKE_VERSION="aws-nuke-v2.15.0-darwin-amd64"
-    NUKE_URL="https://github.com/rebuy-de/aws-nuke/releases/download/v2.15.0/${NUKE_VERSION}.tar.gz"
+    NUKE_VERSION="aws-nuke-v2.15.0-linux-amd64"
+    NUKE_URL="https://github.com/rebuy-de/aws-nuke/releases/download/v2.15.0/aws-nuke-v2.15.0-linux-amd64.tar.gz"
     curl -L -s -o aws-nuke.tar.gz $NUKE_URL
     tar zxvf aws-nuke.tar.gz
     mv "$NUKE_VERSION" "aws-nuke"

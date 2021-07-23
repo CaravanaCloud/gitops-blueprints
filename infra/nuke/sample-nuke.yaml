@@ -90,12 +90,8 @@ accounts:
   "192912639870": # sandbox
     filters:
       IAMUser:
-        - "dalek"
-      IAMUserPolicyAttachment:
-        - "dalek -> AdministratorAccess"
-      IAMUserAccessKey:
-        - property: UserName
-          value: "dalek"
+        - property: "tag:aws-nuke"
+          value: "false"
       CloudFormationStack:
         - property: "tag:aws-nuke"
           value: "false"
@@ -108,6 +104,8 @@ accounts:
         - property: "tag:aws-nuke"
           value: "false"
       S3Bucket:
+        - property: "tag:aws-nuke"
+          value: "false"
         - property: "tag:aws:cloudformation:stack-name"
           value: "CDKToolkit"
 
