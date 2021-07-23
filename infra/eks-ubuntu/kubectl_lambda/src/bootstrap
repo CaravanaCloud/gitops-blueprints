@@ -1,0 +1,58 @@
+#!/bin/sh
+
+#set -euo pipefail
+
+export PATH=$PATH:/opt/awscli:/opt/kubectl:/opt/helm:/tmp/eksctl
+export KUBECONFIG=/tmp/kubeconfig
+
+if [ -z "${cluster_name:-}" ]; then
+    echo "missing cluster_name in lambda environment variables - using 'default' as the cluster_name"
+fi
+
+cluster_name=${cluster_name-default}
+iam_role_arn=${iam_role_arn-default}
+aws_account_id=${aws_account_id-default}
+lambda_role_arn=${lambda_role_arn-default}
+
+echo "Updating kubeconfig to cluster_name=${cluster_name}"
+aws eks update-kubeconfig --name "${cluster_name}"
+
+if ! command -v eksctl > /dev/null 2>&1
+then
+    echo "eksctl could not be found, installing..."
+    mkdir -p /tmp/eksctl
+    curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp/eksctl/
+    eksctl version
+fi
+
+# Processing Invocations
+while true
+do
+  HEADERS="$(mktemp)"
+  # Get the invocation event data
+  EVENT_DATA=$(curl -sS -LD "$HEADERS" -X GET "http://${AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/next")
+  REQUEST_ID=$(grep -Fi Lambda-Runtime-Aws-Request-Id "$HEADERS" | tr -d '[:space:]' | cut -d: -f2)
+
+  # Retrieve the command to run from event data
+  RUNCTL_CMD=$(echo "${EVENT_DATA}" | jq -r '.runctl_cmd')
+  RUNCTL_CMD=${RUNCTL_CMD:-"kubectl version --client"}
+
+  # Execute command and capture response
+  # TODO: Security checks?
+  echo "=========[EVAL][$RUNCTL_CMD]"
+  RESPONSE=$(eval "$RUNCTL_CMD")
+  EXITCODE=$?
+
+  echo "=========[CALLER_ID]"
+  aws sts get-caller-identity
+  echo "=========[EVENT_DATA]"
+  echo "$EVENT_DATA"
+  echo "=========[RUNCTL]"
+  echo "$RUNCTL_CMD"
+  echo "=========[RESPONSE][$EXITCODE]"
+  echo "$RESPONSE"
+  echo "========="
+
+  # Send the response
+  curl -s -X POST "http://${AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/$REQUEST_ID/response"  -d "$RESPONSE"
+done
