@@ -78,4 +78,4 @@ jobs:
 
       - name: Run apply script
         run: ./apply.sh
-        working-directory: eks
+        working-directory: infra/eks-ubuntu
