@@ -27,8 +27,7 @@ jobs:
 
       - name: Debug Info
         run: |
-          echo "Running on branch ${BRANCH_NAME}" \
-          echo "TF_VAR_env_name=${env.TF_VAR_env_name}" \
+          echo "BRANCH_NAME=${BRANCH_NAME}" \
           echo "TF_VAR_aws_region=${env.TF_VAR_aws_region}" \
           echo "GITHUB_WORKFLOW=${env.GITHUB_WORKFLOW}" \
           echo "GITHUB_RUN_ID=${env.GITHUB_RUN_ID}" \
