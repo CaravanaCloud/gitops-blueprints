@@ -17,7 +17,7 @@ aws configure set default.region "${TF_VAR_aws_region}"
 export AWS_REGION=${TF_VAR_aws_region}
 echo "# AWS_REGION=$AWS_REGION"
 
-S3_KEY="terraform/${TF_VAR_env_name}/state"
+S3_KEY="state/${TF_VAR_env_name}"
 echo "# Terraform init with backend s3://$TF_VAR_tf_bucket/$S3_KEY"
 echo ""
 sleep 3

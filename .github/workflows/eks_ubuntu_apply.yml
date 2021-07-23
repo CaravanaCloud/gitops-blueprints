@@ -9,6 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      TF_VAR_tf_bucket: ${{ secrets.TF_BUCKET }}
       TF_VAR_aws_region: ${{ secrets.TF_REGION }}
       # https://cloud-images.ubuntu.com/docs/aws/eks/
       TF_VAR_image_id: ami-02424b9007c11a4e5
