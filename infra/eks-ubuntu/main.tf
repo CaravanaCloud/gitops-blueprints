@@ -35,12 +35,12 @@ variable "max_size" {
 
 variable "instance_type" {
   type    = string
-  default = "t3a.medium"
+  default = "t3.medium"
 }
 
 variable "image_id" {
   type    = string
-  default = "ami-025102f49d03bec05"
+  default = "ami-0a5ba8298614a7171"
 }
 
 variable "root_size" {
