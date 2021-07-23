@@ -73,14 +73,6 @@ variable "capacity_type" {
   default = "ON_DEMAND"
 }
 
-module "helm_install" {
-  source = "..\/util\/helm_install"
-}
-
-module "kubectl_install" {
-  source = "..\/util\/kubectl_install"
-}
-
 module "iam_admin" {
   source = "./iam_admin"
   env_name = var.env_name
