@@ -24,8 +24,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: nelonoel/branch-name@v1.0.1
-      - name: Identify branch and env
-        run: echo "Running on branch ${BRANCH_NAME} env ${TF_VAR_env_name}"
+
+      - name: Debug Info
+        run: echo "Running on branch ${BRANCH_NAME}" \
+             echo "TF_VAR_env_name=${TF_VAR_env_name}"
 
       #TODO: Cache Binaries
       - name: Download kubectl
