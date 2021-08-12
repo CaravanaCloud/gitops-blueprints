@@ -19,6 +19,9 @@ This repository shares the result of our practice in building Kubernetes based a
 https://github.com/aws-samples/amazon-eks-refarch-cloudformation
 
 # How to run
-Deploy using standard `terraform apply` or the convenience `apply.sh` scripts test.
+
+You can deploy using standard `terraform apply` or the convenience `apply.sh` scripts test.
+This repo also has github actions matching the contents of the ```infra/``` directory for deployments.
+However, it's all work in progress, waiting for your PR :)
 
 .
