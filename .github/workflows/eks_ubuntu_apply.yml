@@ -12,7 +12,7 @@ jobs:
       TF_VAR_tf_bucket: ${{ secrets.TF_BUCKET }}
       TF_VAR_aws_region: ${{ secrets.TF_REGION }}
       # https://cloud-images.ubuntu.com/docs/aws/eks/
-      TF_VAR_image_id: ${{ secrets.TF_VAR_image_id }}
+      TF_VAR_image_id: ${{ secrets.TF_VAR_IMAGE_ID }}
       TF_VAR_instance_type: t3a.medium
       TF_VAR_min_size: 1
       TF_VAR_desired_capacity: 1
